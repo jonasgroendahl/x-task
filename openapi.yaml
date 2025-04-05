@@ -1,0 +1,94 @@
+openapi: 3.0.3
+info:
+  title: Xilium API
+  description: API for Xilium recruitment assessment
+  version: 1.0.0
+servers:
+  - url: https://projectx-api-app-lgggp.ondigitalocean.app
+    description: Production server
+paths:
+  /api/corporation/{corporationId}/tree_view_shop:
+    get:
+      summary: Get product catalog
+      description: Retrieves the product catalog for a specific corporation
+      operationId: getProductCatalog
+      parameters:
+        - name: corporationId
+          in: path
+          required: true
+          description: ID of the corporation
+          schema:
+            type: string
+            example: "1950"
+        - name: key
+          in: query
+          required: true
+          description: API authentication key
+          schema:
+            type: string
+            example: 23411gcDg210C32fDSDfaZgf45lkoi65
+        - name: customer_id
+          in: query
+          required: false
+          description: Optional customer identifier
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Successful response with product data
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  data:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/Product"
+        "401":
+          description: Authentication error - invalid or missing API key
+        "404":
+          description: Corporation not found
+        "500":
+          description: Internal server error
+
+components:
+  schemas:
+    Product:
+      type: object
+      properties:
+        id:
+          type: string
+          example: "prod_123456"
+        name:
+          type: string
+          example: "Product Name"
+        description:
+          type: string
+          example: "Product description text"
+        price:
+          type: number
+          format: float
+          example: 99.99
+        currency:
+          type: string
+          example: "USD"
+        category:
+          type: string
+          example: "Electronics"
+        image_url:
+          type: string
+          format: uri
+          example: "https://example.com/images/product.jpg"
+        in_stock:
+          type: boolean
+          example: true
+        rating:
+          type: number
+          format: float
+          minimum: 0
+          maximum: 5
+          example: 4.5
