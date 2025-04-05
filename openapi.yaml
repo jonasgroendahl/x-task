@@ -9,9 +9,9 @@ servers:
 paths:
   /api/corporation/{corporationId}/tree_view_shop:
     get:
-      summary: Get product catalog
-      description: Retrieves the product catalog for a specific corporation
-      operationId: getProductCatalog
+      summary: Get categories
+      description: Retrieves the categories for a specific corporation
+      operationId: getCategories
       parameters:
         - name: corporationId
           in: path
@@ -41,54 +41,338 @@ paths:
               schema:
                 type: object
                 properties:
-                  success:
-                    type: boolean
-                    example: true
+                  result:
+                    type: string
+                    example: "Success"
                   data:
                     type: array
                     items:
-                      $ref: "#/components/schemas/Product"
+                      $ref: "#/components/schemas/Category"
         "401":
           description: Authentication error - invalid or missing API key
         "404":
           description: Corporation not found
         "500":
           description: Internal server error
+  /api/category/{categoryId}/details_shop:
+    get:
+      summary: Get category details with products
+      description: Retrieves detailed information about a category and its products
+      operationId: getCategoryDetails
+      parameters:
+        - name: categoryId
+          in: path
+          required: true
+          description: ID of the category
+          schema:
+            type: string
+        - name: products
+          in: query
+          required: false
+          description: Include products in response (1 = yes)
+          schema:
+            type: string
+            enum: ["1", "0"]
+        - name: sales_channel_id
+          in: query
+          required: false
+          description: Sales channel identifier
+          schema:
+            type: string
+        - name: key
+          in: query
+          required: true
+          description: API authentication key
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Successful response with category details
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  result:
+                    type: string
+                    example: "Success"
+                  data:
+                    $ref: "#/components/schemas/CategoryDetail"
+        "401":
+          description: Authentication error - invalid or missing API key
+        "404":
+          description: Category not found
+        "500":
+          description: Internal server error
 
 components:
   schemas:
+    Category:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 226
+        category_id:
+          type: integer
+          nullable: true
+          example: null
+        corporation_id:
+          type: integer
+          example: 1950
+        sort_order:
+          type: integer
+          example: 0
+        name:
+          type: string
+          example: "Wear"
+        name_language_1:
+          type: string
+          nullable: true
+          example: null
+        name_language_2:
+          type: string
+          nullable: true
+          example: null
+        name_language_3:
+          type: string
+          nullable: true
+          example: null
+        name_language_4:
+          type: string
+          nullable: true
+          example: null
+        description:
+          type: string
+          example: "This is a category with wearables"
+        image:
+          type: string
+          format: uri
+          example: "https://res.cloudinary.com/xilium/image/upload/w_400/v1705341020/Category/ctdou8jv5ty9wweefk3j.png"
+        image_public_id:
+          type: string
+          example: "Category/ctdou8jv5ty9wweefk3j"
+        enabled:
+          type: integer
+          enum: [0, 1]
+          example: 1
+        created_at:
+          type: string
+          format: date-time
+          example: "2023-09-26T12:32:37.000000Z"
+        updated_at:
+          type: string
+          format: date-time
+          example: "2024-01-15T17:50:21.000000Z"
+        deleted_at:
+          type: string
+          format: date-time
+          nullable: true
+          example: null
+        sub_categories_recursive:
+          type: array
+          items:
+            $ref: "#/components/schemas/SubCategory"
+
+    SubCategory:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 230
+        category_id:
+          type: integer
+          example: 226
+        corporation_id:
+          type: integer
+          example: 1950
+        sort_order:
+          type: integer
+          example: 0
+        name:
+          type: string
+          example: "Long Sleeve DA"
+        name_language_1:
+          type: string
+          nullable: true
+          example: "Long Sleeve EN"
+        name_language_2:
+          type: string
+          nullable: true
+          example: "Long Sleeve SE"
+        name_language_3:
+          type: string
+          nullable: true
+          example: "Long Sleeve ?"
+        name_language_4:
+          type: string
+          nullable: true
+          example: null
+        description:
+          type: string
+          example: "Long Sleeve"
+        image:
+          type: string
+          format: uri
+          example: "https://res.cloudinary.com/xilium/image/upload/w_400/v1705339716/Category/ajwoqhysa8lmx731ptoq.png"
+        image_public_id:
+          type: string
+          example: "Category/ajwoqhysa8lmx731ptoq"
+        enabled:
+          type: integer
+          enum: [0, 1]
+          example: 1
+        created_at:
+          type: string
+          format: date-time
+          example: "2023-09-27T10:56:57.000000Z"
+        updated_at:
+          type: string
+          format: date-time
+          example: "2024-07-25T05:55:27.000000Z"
+        deleted_at:
+          type: string
+          format: date-time
+          nullable: true
+          example: null
+        except_from_sales_channels:
+          type: array
+          items:
+            type: string
+          example: []
+        sub_categories_recursive:
+          type: array
+          items:
+            $ref: "#/components/schemas/SubCategory"
+    CategoryDetail:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 73
+        name:
+          type: string
+          example: "Blushing Birds"
+        name_language_1:
+          type: string
+          nullable: true
+        name_language_2:
+          type: string
+          nullable: true
+        name_language_3:
+          type: string
+          nullable: true
+        name_language_4:
+          type: string
+          nullable: true
+        description:
+          type: string
+          example: "Blushing birds"
+        image:
+          type: string
+          format: uri
+        enabled:
+          type: integer
+          enum: [0, 1]
+        sub_categories_count:
+          type: integer
+        products:
+          type: array
+          items:
+            $ref: "#/components/schemas/Product"
+
     Product:
       type: object
       properties:
         id:
+          type: integer
+        sku:
           type: string
-          example: "prod_123456"
+        addon:
+          type: integer
+        instock:
+          type: integer
+        reservations:
+          type: integer
+        stock_available:
+          type: integer
+        web_stock:
+          type: string
+        expected_delivery:
+          type: string
+          nullable: true
+        whitelabel:
+          type: string
+          nullable: true
+        source:
+          type: string
+        brand:
+          $ref: "#/components/schemas/Brand"
+        release:
+          type: string
+          nullable: true
+        available:
+          type: string
+          nullable: true
+        end_of_life:
+          type: string
+          nullable: true
+        barred:
+          type: integer
+        bar_code:
+          type: string
+        cost_price:
+          type: number
+          format: float
+        cost_price_currency:
+          type: string
+        sales_price:
+          type: number
+          format: float
+        sales_price_currency:
+          type: string
         name:
           type: string
-          example: "Product Name"
         description:
           type: string
-          example: "Product description text"
-        price:
-          type: number
-          format: float
-          example: 99.99
-        currency:
-          type: string
-          example: "USD"
-        category:
-          type: string
-          example: "Electronics"
-        image_url:
+        image:
           type: string
           format: uri
-          example: "https://example.com/images/product.jpg"
-        in_stock:
-          type: boolean
-          example: true
-        rating:
-          type: number
-          format: float
-          minimum: 0
-          maximum: 5
-          example: 4.5
+        large_image:
+          type: string
+          format: uri
+        original_image:
+          type: string
+          format: uri
+        unit_type:
+          type: string
+        stage:
+          type: string
+        count_on_order:
+          type: integer
+        collis:
+          type: array
+          items:
+            $ref: "#/components/schemas/Collis"
+
+    Brand:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        sku_key:
+          type: string
+
+    Collis:
+      type: object
+      properties:
+        id:
+          type: integer
+        label:
+          type: string
+        amount:
+          type: integer
+        recommended:
+          type: integer
