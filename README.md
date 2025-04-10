@@ -8,7 +8,7 @@ Run `npm install` to fetch packages then run `npm run dev` to start the developm
 
 ## Task 1 - Display Products
 
-This repository includes an OpenAPI specification that documents an external API. Note that we'll working with product data from the corporation with ID `1950`. Your first challenge is to:
+This repository includes an OpenAPI specification that documents an external API. Note that we'll working with product data from the corporation with ID `1950`. Also note that the API is using some simple authentication, api key to be found in the spec as well. Your first challenge is to:
 
 1. Review the API documentation to understand the available endpoints
 2. Implement a solution to fetch product data for a given category from the API
