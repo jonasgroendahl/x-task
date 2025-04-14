@@ -8,10 +8,12 @@ Run `npm install` to fetch packages then run `npm run dev` to start the developm
 
 ## Task 1 - Display Products
 
-This repository includes an OpenAPI specification that documents an external API. Note that we'll working with product data from the corporation with ID `1950`. Also note that the API is using some simple authentication, api key to be found in the spec as well. Your first challenge is to:
+This repository includes an OpenAPI specification that documents an external API. Note that we'll working with product data from the corporation with ID `1950`. Also note that the API is using some simple authentication, api key to be found in the spec as well in the example section.
+
+Your first challenge is to:
 
 1. Review the API documentation to understand the available endpoints
-2. Implement a solution to fetch product data for a given category from the API
+2. Implement a solution to fetch product data for a given category from the API. Note that categories can be deeply nested and products are linked to a leaf node.
 3. Display the products in a table with appropriate UI handling for loading and error states
 
 **Note**: We've included `@tanstack/react-query` as a dependency which may be helpful for managing API requests and data fetching, though you're welcome to use any approach you prefer.
